@@ -81,26 +81,33 @@ def recommend(movie):
     
     return valid_names, valid_posters
 
-# Custom CSS for consistent alignment
+# Custom CSS for consistent alignment and spacing
 st.markdown("""
     <style>
     .movie-title {
         font-size: 16px;
         font-weight: bold;
-        margin-top: 10px;  /* Space above title */
+        margin-top: 10px;
         text-align: center;
-        word-wrap: break-word;  /* Allow long titles to wrap */
+        word-wrap: break-word;
     }
     .movie-poster {
         width: 100%;
         height: auto;
         object-fit: cover;
+        padding: 10px;  /* Add padding around images */
+        box-sizing: border-box;
     }
     .movie-column {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+        min-width: 140px;  /* Ensure columns are wide enough */
+    }
+    .stColumn > div {
+        display: flex;
+        justify-content: center;  /* Center content in columns */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -121,25 +128,30 @@ if st.button('Show Recommendation'):
     if not recommended_movie_names:
         st.markdown('<div class="movie-title">No recommendations with images available.</div>', unsafe_allow_html=True)
     else:
-        cols = st.columns(len(recommended_movie_names))
-        for i, (name, poster) in enumerate(zip(recommended_movie_names, recommended_movie_posters)):
-            with cols[i]:
-                try:
-                    print(f"Attempting to display image {i+1}: {poster}")
-                    st.image(
-                        poster,
-                        width=200,
-                        caption=None,
-                        clamp=True,
-                        output_format='auto'
-                    )
-                except Exception as e:
-                    print(f"Failed to display image {i+1}: {e}")
-                    st.markdown(
-                        '<div class="movie-title">Image display failed</div>',
-                        unsafe_allow_html=True
-                    )
-                st.markdown(
-                    f'<div class="movie-title">{name}</div>',
-                    unsafe_allow_html=True
-                )
+        # Use fixed 5 columns with medium gap
+        cols = st.columns(5, gap="medium")
+        for i, col in enumerate(cols):
+            with col:
+                if i < len(recommended_movie_names):  # Display only available recommendations
+                    try:
+                        print(f"Attempting to display image {i+1}: {recommended_movie_posters[i]}")
+                        st.image(
+                            recommended_movie_posters[i],
+                            width=120,  # Smaller width to prevent overlap
+                            caption=None,
+                            clamp=True,
+                            output_format='auto'
+                            # Removed use_column_width, no need for use_container_width
+                        )
+                        st.markdown(
+                            f'<div class="movie-title">{recommended_movie_names[i]}</div>',
+                            unsafe_allow_html=True
+                        )
+                    except Exception as e:
+                        print(f"Failed to display image {i+1}: {e}")
+                        st.markdown(
+                            '<div class="movie-title">Image display failed</div>',
+                            unsafe_allow_html=True
+                        )
+                else:
+                    st.empty()  # Placeholder for empty columns
