@@ -128,7 +128,7 @@ if st.button('Show Recommendation'):
                     print(f"Attempting to display image {i+1}: {poster}")
                     st.image(
                         poster,
-                        use_container_width=True,
+                        width=200,
                         caption=None,
                         clamp=True,
                         output_format='auto'

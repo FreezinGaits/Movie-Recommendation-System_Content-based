@@ -29,6 +29,8 @@ __pycache__/
 # Ignore data files
 *.csv
 *.pkl
+!movie_list.pkl
+!similarity.pkl
 *.h5
 *.db
 *.sqlite
