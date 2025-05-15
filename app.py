@@ -6,6 +6,9 @@ import nest_asyncio
 import json
 import os
 
+# At the top of your app.py
+APP_VERSION = "1.0.1"  # Update this with each change
+
 # Apply nest_asyncio for Streamlit
 nest_asyncio.apply()
 
@@ -168,6 +171,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 movies = pickle.load(open('movie_list.pkl', 'rb'))
 similarity = pickle.load(open('similarity.pkl', 'rb'))
+# In your UI somewhere
+st.markdown(f"<div style='text-align: center; color: gray;'>Version: {APP_VERSION}</div>", unsafe_allow_html=True)
 
 movie_list = movies['title'].values
 # Apply custom CSS to selectbox label using markdown
