@@ -81,9 +81,18 @@ def recommend(movie):
     
     return valid_names, valid_posters
 
-# Custom CSS for consistent alignment and spacing
+# Custom CSS for consistent alignment, spacing, selectbox, and button styling
 st.markdown("""
     <style>
+    .header {
+        font-size: 36px !important;
+        font-weight: 600 !important;
+        color: #FFD700 !important;
+        text-align: center;
+        margin-bottom: 30px !important;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f2f6;
+    }
     .movie-title {
         font-size: 16px;
         font-weight: bold;
@@ -109,19 +118,67 @@ st.markdown("""
         display: flex;
         justify-content: center;  /* Center content in columns */
     }
+    .new {
+        font-size: 20px !important;
+        font-weight: 500 !important;
+        color: #00FFFF !important; /* Cyan for a vibrant, techy contrast */
+        text-align: center !important;
+        margin-top: 10px !important;
+        margin-bottom: 15px !important;
+        font-family: 'Arial', sans-serif !important;
+        letter-spacing: 0.5px !important;
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.5) !important; /* Subtle glow for cinematic effect */
+        transition: color 0.3s ease !important; /* Smooth color transition for hover */
+    }
+    .new:hover {
+        color: #00CED1 !important; /* Slightly darker cyan on hover */
+    }
+    .stButton>button {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 20px auto !important;
+        padding: 12px 24px !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        font-family: 'Arial', sans-serif !important;
+        color: #FFFFFF !important;
+        background: linear-gradient(45deg, #FF1493, #00BFFF) !important;
+        border: none !important;
+        border-radius: 25px !important;
+        box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        cursor: pointer !important;
+        width: fit-content !important;
+    }
+    .stButton>button:hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 6px 20px rgba(0, 191, 255, 0.7) !important;
+    }
+    .stButton>button:active {
+        transform: scale(0.95) !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-st.header('Movie Recommender System')
+st.markdown("""
+    <div class="header">
+        🎬 Movie Magic Recommender
+    </div>
+""", unsafe_allow_html=True)
 movies = pickle.load(open('movie_list.pkl', 'rb'))
 similarity = pickle.load(open('similarity.pkl', 'rb'))
 
 movie_list = movies['title'].values
+# Apply custom CSS to selectbox label using markdown
+st.markdown('<div class="new">Let\'s find your movie match!</div>', unsafe_allow_html=True)
 selected_movie = st.selectbox(
-    "Type or select a movie from the dropdown",
-    movie_list
+    "",
+    movie_list,
+    label_visibility="collapsed"  # Hide default label to use custom markdown
 )
 
+# Use Streamlit's native button with custom CSS
 if st.button('Show Recommendation'):
     recommended_movie_names, recommended_movie_posters = recommend(selected_movie)
     
@@ -141,7 +198,6 @@ if st.button('Show Recommendation'):
                             caption=None,
                             clamp=True,
                             output_format='auto'
-                            # Removed use_column_width, no need for use_container_width
                         )
                         st.markdown(
                             f'<div class="movie-title">{recommended_movie_names[i]}</div>',
